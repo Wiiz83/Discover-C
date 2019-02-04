@@ -1,0 +1,10 @@
+#!/bin/sh
+
+
+for file in example/*.o
+do
+	echo "======================================="
+	echo "		$file			     "
+	echo "======================================="
+	./main $file
+done

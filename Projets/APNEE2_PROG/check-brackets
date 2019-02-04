@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for video in tonRepertoire/*
+  do
+
+
+done

@@ -1,0 +1,573 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-- saved from url=(0061)http://inf352.forge.imag.fr/Apnees/Apnee_1/Compilation_C.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+</head>
+<body bgcolor="#FFFFFF">
+
+<center>
+<h2>
+<font color="#3333FF">L3 Informatique</font></h2></center>
+
+<center>
+<h2>
+<font color="#3333FF">Prise en main de l'environnement de développement</font></h2></center>
+
+<center>
+<h3>
+<font color="#3333FF">Partie II : Utilisation des outils de compilation
+et de mise au point</font></h3></center>
+
+<hr>
+<h3>
+Contenu</h3>
+Cette partie présente l'utilisation du compilateur gcc et de l'
+outil de mise au point <tt><font size="+1">gdb</font></tt>.
+<ol>
+<li>
+<a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Compilation_C.html#T1" class="Index">Compilation d'un programme en C</a></li>
+
+<li>
+<a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Compilation_C.html#T2" class="Index">Observation de l'exécution d'un programme</a></li>
+
+<!--
+<li>
+<a href="#T3" CLASS="Index">Bibliographie</a></li>
+-->
+</ol>
+
+<hr>
+<h3 class="Niveau1">
+<a name="T1"></a><b>1- Fabrication d'un exécutable a partir de sources
+en C</b></h3>
+
+<h4 class="Niveau2">
+1.1 Fichiers sources</h4>
+Le code source d'une application (un programme) ecrit en C est défini
+dans un ou plusieurs fichiers sources contenant chacun une ou plusieurs
+déclarations de variables et/ou fonctions (que l'on appelle également
+<i>unités
+de compilation</i>). La seule contrainte forte qu'il est necessaire de
+respecter est que l'un des fichiers source doit contenir la definition
+d'une fonction nommée <i>main</i> appelée aussi
+<i>procédure
+principale</i> du programme. Sans definition de <i>main</i> la compilation
+echouera sur une erreur de lien (symbole <i>main</i> non défini).
+<br>La création et la modification d'un fichier source en C s'effectue
+au moyen d'un éditeur de texte comme <tt><font size="+1">nedit</font></tt>,
+<tt><font size="+1">vi</font></tt>,
+<tt><font size="+1">emacs</font></tt>,
+etc., de la même façon que n'importe quel fichier contenant
+du texte. Il vous est conseillé d'utiliser <tt><font size="+1">nedit</font></tt>
+qui offre des options (par exemple le surlignage syntaxique) utiles et
+faciles à configurer.<!--
+<h4 CLASS="Niveau2">
+1.2 Accès au compilateur Ada</h4>
+
+Le compilateur Ada Gnat est une version modifiée
+du compilateur <tt><font size=+1>gcc</font></tt> développé
+sous licence GNU (logiciels libres). Il est probable que sur la machine
+(le serveur) sur lequel vous êtes connecté il existe plusieurs
+versions du programme
+<tt><font size=+1>gcc</font></tt>, destinée
+chacune à un contexte d'utilisation particulier. Il faut donc vous
+assurer avant d'essayer de compiler un programme Ada que, dans votre environnement,
+la version du compilateur <tt><font size=+1>gcc</font></tt> accessible
+par défaut est bien celle de l'environnement Gnat compatible avec
+le langage Ada.
+<br>
+<table BORDER WIDTH="100%" >
+<tr>
+<td>
+<b><font color="#CC0000">Exercice</font></b>
+<ol>
+<li>
+<font color="#CC0000">Affichez le contenu de la variable d'environnement
+<tt><font size=+1>PATH</font></tt>.</font></li>
+
+<br><font color="#CC0000">Le répertoire <tt><font size=+1>/opt/gnu/gnat/bin/</font></tt>
+figure-t'il en tête de la liste de chemins affichés ?</font>
+<br><font color="#CC0000">Si la réponse est positive vous êtes
+prêt à utiliser le compilateur Ada Gnat.</font>
+<li>
+<font color="#CC0000">Si la réponse à la question précédente
+est négative, vous devez modifier votre environnement de la façon
+suivante :</font></li>
+
+<ul>
+<li>
+<font color="#CC0000">Copiez le fichier <tt><font size=+1><a href="setenvgnat">setenvgnat</a></font></tt>
+dans votre répertoire d'accueil (désigné par le symbole
+'<tt><font size=+1>~</font></tt>' ou bien par la valeur de la variable
+<tt><font size=+1>HOME</font></tt>).
+Pour effectuer cette copie cliquez dans le navigateur sur le lien indiqué
+; utilisez le bouton gauche de la souris tout en appuyant simultanément
+sur la touche Majuscule du clavier.</font></li>
+
+<li>
+<font color="#CC0000">Exécuter la commande : <tt><font size=+1>source
+~/setenvgnat</font></tt></font></li>
+
+<li>
+<font color="#CC0000">Alternativement, vous pouvez aussi modifier directement
+la valeur de la variable <tt><font size=+1>PATH</font></tt> en appliquant
+les consignes qui vous ont été communiquées dans la
+1ère partie de ce TP (Utilisation d'un interprète de commandes
+Unix).</font></li>
+</ul>
+<font color="#CC0000">Itérez à la question 1.</font></ol>
+</td>
+</tr>
+</table>
+
+<h4 CLASS="Niveau2">
+1.3 Génération de fichiers objets</h4>
+La compilation d'un fichier source <tt><font size=+1>.ads</font></tt>
+ou <tt><font size=+1>.adb</font></tt> produit deux fichiers :
+<ol>
+<li>
+un fichier objet, dont le nom est identique à celui du fichier source
+dont il est issu mais est terminé par le suffixe <tt><font size=+1>.o</font></tt>.
+Il est rappelé qu'un fichier objet contient le code binaire produit
+par la traduction du code source.</li>
+
+<br>Dans le cas de Ada et de Gnat, un fichier objet n'est créé
+que si le fichier source contient du code réalisant l'implantation
+d'un sous-programme ou d'un paquetage (<tt><font size=+1>.adb</font></tt>).
+La compilation de la partie spécification d'un paquetage (<tt><font size=+1>.ads</font></tt>)
+ne produit aucun code binaire et n'aboutit donc à la création
+d'aucun fichier objet.
+<br>
+<li>
+un fichier de dépendances décrivant précisément
+les dépendances de l'unité qui vient d'être compilée
+par rapport aux unités compilées antérieurement ou
+contenues dans une bibliothèque. Le nom de ce fichier de dépendances
+est identique à celui du fichier source compilé et se termine
+par le suffixe <tt><font size=+1>.ali</font></tt>. Ce fichier est systématiquement
+créé par le compilateur, qu'il ait ou non production de code
+objet. Il est utilisé de façon automatique dans la suite
+du processus de construction de l'exécutable, et le programmeur
+n'a en principe pas à le manipuler ni à en connaître
+le contenu.</li>
+</ol>
+La compilation d'un fichier source s'obtient au moyen de la commande :
+<blockquote><tt><font size=+1>gcc -c &lt;nom fichier source></font></tt></blockquote>
+
+<table BORDER WIDTH="100%" >
+<tr>
+<td>
+<b><font color="#CC0000">Exercice</font></b>
+<ol>
+<li>
+<font color="#CC0000">Copiez le fichier <tt><font size=+1><a href="texte.ads">texte.ads</a></font></tt>
+dans le répertoire <tt><font size=+1>tp1</font></tt> (cliquez sur
+le lien au moyen du bouton gauche de la souris tout en appuyant simultanément
+dur la touche Majuscule du clavier).</font></li>
+
+<br><font color="#CC0000">Compilez <tt><font size=+1>texte.ads</font></tt>.
+Que constate-t'on ? Quels sont les fichiers qu'a créés le
+compilateur ?</font>
+<li>
+<font color="#CC0000">Copiez le fichier <tt><font size=+1><a href="texte.adb">texte.adb</a></font></tt>
+dans votre répertoire de travail.</font></li>
+
+<br><font color="#CC0000">Compilez <tt><font size=+1>texte.adb</font></tt>.
+Quels fichiers le compilateur a-t'il créés ?</font>
+<li>
+<font color="#CC0000">Supprimez les fichiers créés
+par le compilateur lors des deux étapes précédentes.
+Recompilez ensuite <tt><font size=+1>texte.adb</font></tt>, sans avoir
+compilé au préalable <tt><font size=+1>texte.ads</font></tt>.
+Que constate-t'on ?</font></li>
+</ol>
+</td>
+</tr>
+</table>
+-->
+<h4 class="Niveau2">
+1.2 Génération d'un exécutable</h4>
+La génération d'un programme exécutable suppose que
+ce programme contient une procédure principale. Une application
+en C comprend donc au minimum une unité de compilation contenant
+la procédure principale, à laquelle peuvent s'ajouter autant
+d'unités de compilation supplémentaires que nécessaire.
+Le programmeur est ainsi dans la plupart des cas conduit à modifier
+et à recompiler plusieurs fichiers sources pour construire et mettre
+au point l'exécutable d'un programme en C donné. Durant cette
+séance nous utiliserons le compilateur <i>gcc</i> de manière
+un peu simpliste. Nous verrons à l'occasion des TD qu'il est possible
+de contrôler beaucoup plus finement le processus de compilation afin
+d'éviter des recompilations inutiles et/ou d'intercepter de possibles
+erreurs de programmation. Pour l'heure la commande de compilation d'un
+programme sera la suivante :
+<blockquote><tt><font size="+1">gcc -Wall -Werror -o &lt;nom du programme final&gt; &lt;ensemble
+des fichiers source (.c)&gt;</font></tt></blockquote>
+<!--
+ Après
+compilation, les multiples fichiers objets créés à
+partir de ces différentes unités de compilation doivent être
+<i>liés</i>
+ensemble afin d'aboutir à la génération d'un fichier
+exécutable unique.
+<p>D'autre part, la génération d'un exécutable fait
+appel à des bibliothèques contenant le code d'initialisation
+du programme ainsi que divers sous programmes standards associés
+à l'environnement d'exécution du langage Ada. Ces bibliothèques
+doivent elles aussi être liées au reste de l'exécutable.
+<p>Il est donc nécessaire de disposer d'un outil permettant de lier
+ensemble les différents fichiers objets d'une application ainsi
+que les bibliothèques qui leur sont associées. Cet outil
+s'appelle l'<i>éditeur de liens</i>. Son invocation nécessite
+un nombre de paramètres importants dont la syntaxe et la signification
+sont d'une certaine complexité. Il est donc souhaitable de décharger
+le programmeur de cette tâche en l'automatisant.
+<p>La modification d'un fichier source unique parmi tous ceux composant
+une application nécessite de recréer un nouvel exécutable
+prenant en compte cette modification. Pour des raisons évidentes
+de gain de temps, on veut dans ce cas éviter de recompiler inutilement
+les fichiers sources qui n'ont pas été modifiés avant
+de générer le nouvel exécutable.
+<p>Pour toutes les raisons qui précèdent, l'environnement
+de développement Ada Gnat offre un outil de construction des exécutables
+qui prend en charge et automatise les fonctions suivantes :
+<ul>
+<li>
+Invocation du compilateur pour les seules unités :</li>
+
+<ol>
+<li>
+qui sont requises et utilisées par la procédure principale
+(et récursivement)</li>
+
+<li>
+dont le code source a été récemment modifié.</li>
+</ol>
+
+<li>
+Invocation de l'éditeur de liens appliqué aux bibliothèques
+et fichiers objets requis</li>
+</ul>
+Le nom de cet outil est <tt><font size=+1>gnatmake</font></tt>. Il s'utilise
+de la façon suivante :
+<blockquote><tt><font size=+1>gnatmake &lt;nom de la procédure principale>.adb</font></tt></blockquote>
+Dans l'environnement Unix, le fichier exécutable produit par <tt><font size=+1>gnatmake</font></tt>
+a pour nom celui de la procédure principale ; dans l'environnement
+Windows, le suffixe <tt><font size=+1>.exe</font></tt> est concaténé
+à ce nom.
+-->
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 1</font></b>
+<ol>
+<li>
+<font color="#CC0000">Placez-vous dans votre répertoire <tt>Projet/Seance_1</tt>
+et vérifiez qu'il contient bien les fichiers 
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/compteur.h">compteur.h</a></font></tt>,
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/compteur.c">compteur.c</a></font></tt>,
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/texte.h">texte.h</a></font></tt>,
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/texte.c">texte.c</a></font></tt>
+et
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/compter_les_a.c">compter_les_a.c</a></font></tt>
+.</font></li>
+
+<br><font color="#CC0000">Générez l'exécutable de
+l'application "compter les A" avec la commande :<br><tt>gcc -Wall
+-Werror -o compter_les_a compteur.c texte.c compter_les_a.c</tt></font>
+<br><font color="#CC0000">Quels nouveaux fichiers ont-ils été
+créés ?</font>
+<br><font color="#CC0000">Quel est le nom de l'exécutable
+?</font><br><br>
+<li>
+<font color="#CC0000">Exécutez le programme obtenu.</font></li>
+
+<br><font color="#CC0000">Tapez une chaîne de caractères contenant
+des '<tt><font size="+1">A</font></tt>' (majuscules), puis un retour à
+la ligne (touche "<tt><font size="+1">Entrée</font></tt>" ou "<tt><font size="+1">Return</font></tt>").</font>
+<br><font color="#CC0000">Vérifiez que la valeur affichée
+correspond bien au résultat attendu.</font></ol>
+</td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau1">
+<a name="T2"></a>2. Utilisation d'un outil de mise au point</h3>
+
+<h4 class="Niveau2">
+2.1 Outils d'observation et de mise au point</h4>
+Tout environnement de programmation comprend un outil de mise au point
+appelé aussi "débogueur" (!?) ou "debugger". Dans l'environnement
+Unix, plusieurs outils de ce type sont disponibles. Les plus connus sont
+<tt><font size="+1">gdb</font></tt>
+(développé dans le cadre du projet GNU) et <tt><font size="+1">dbx</font></tt>.
+<p>Un metteur au point permet d'observer l'exécution d'un programme
+et d'en contrôler le déroulement. Les principales caractéristiques
+offertes sont :
+</p><ul>
+<li>
+Insertion de points d'arrêt entre deux instructions du code source.</li>
+
+<li>
+Exécution pas à pas, c'est à dire instruction source
+après instruction source.</li>
+
+<li>
+Affichage à la demande de la valeur de variables ou expressions</li>
+
+<li>
+Affichage automatique de la valeur de variables ou expressions (à
+chaque arrêt de l'exécution)</li>
+</ul>
+Les metteurs au point <tt><font size="+1">gdb</font></tt> et <tt><font size="+1">dbx</font></tt>
+fonctionnent en mode texte, c'est à dire qu'ils interprètent
+des commandes entrées au clavier par l'utilisateur et affichent
+en retour les résultats éventuels à la suite du texte
+de ces commandes.
+<p>Il existe aussi des programmes metteurs au point fonctionnant en mode
+graphique. Ces programmes utilisent en fait leurs homologues fonctionnant
+en mode texte en leur ajoutant une sur-couche graphique autorisant une
+saisie d'informations via des objets graphiques tels que boutons, listes,
+curseurs, etc. et l'affichage selon des modalités non textuelles.
+Des exemples de metteurs au point graphiques sont <tt><font size="+1">ddd</font></tt>
+(projet GNU) et <tt><font size="+1">xxgdb</font></tt>.
+</p><p>Dans le cadre de votre formation, nous utiliserons <tt><font size="+1">gdb</font></tt>.
+<!--
+et <tt><font size=+1>ddd</font></tt>. 
+-->
+<tt><font size="+1">gdb</font></tt>
+était à l'origine destiné à la mise au point
+des seuls programmes écrits en langage C mais il est desormais utilisable
+avec la plupart des langages (nombreux assembleurs, Fortran, ADA, etc.).
+<!--
+L'outil <tt><font size=+1>ddd</font></tt> est quant à lui configurable
+et peut être adapté à plusieurs langages ainsi qu'à
+plusieurs metteurs au point.
+-->
+</p><p>Pour mettre à profit l'utilisation d'un metteur au point,
+il est nécessaire d'inclure dans l'exécutable les symboles
+des variables, procédures, fonctions, etc. que l'on souhaite observer
+et/ou mettre au point. Il faut aussi pouvoir accéder au texte source
+du programme afin de pouvoir suivre son exécution instruction après
+instruction. Cette préparation spéciale de l'exécutable
+est obtenue en ajoutant l'option <tt><font size="+1">-g</font></tt> à
+la commande de compilation :
+</p><blockquote><tt><font size="+1">gcc -Wall -Werror -g -o &lt;nom du programme final&gt; &lt;ensemble
+des fichiers source (.c)&gt;</font></tt></blockquote>
+Lorsque le programme fonctionne de façon satisfaisante et qu'une
+version stable en a donc été obtenue, il est nécessaire
+d'en reconstruire l'exécutable une dernière fois afin de
+retirer les informations de mise au point devenues inutiles (et dans certains
+cas génantes). Il suffit pour cela d'omettre l'option de mise au
+point lors de la reconstruction.
+<h4>
+2.2 Présentation de gdb</h4>
+Le programme gdb est invoqué au moyen de la commande :
+<blockquote><tt><font size="+1">gdb &lt;nom de l'exécutable&gt;</font></tt></blockquote>
+L'interface d'utilisation du programme est constituée d'une invite de commande
+speciale acceptant des commandes propres à gbd. Les commandes les plus utiles sont :
+<!--
+d'une fenêtre principale elle-même composée de deux
+sous-fenêtres (cf. <a href="figureddd.png">figure 1</a>) :
+-->
+<ul>
+<li>
+<tt>list</tt> : permet d'afficher un bloc de lignes du code source du programme débuggé
+situé à la position courante de l'exécution. Une répétition de cette commande affiche la suite du code
+source. On peut donner un argument à cette commande qui indique la position du bloc à afficher,
+essentiellement sous l'une des formes suivantes :
+<ul>
+	<li><tt>numero</tt> de ligne dans le fichier en cours d'affichage
+	</li><li><tt>fichier:numero</tt> de ligne
+	</li><li><tt>nom de fonction</tt>
+</li></ul>
+</li><li>
+<tt>break</tt> : permet de placer un point d'arrêt à une position définie de la même manière
+que dans le cas de la commande <tt>list</tt>.
+</li><li>
+<tt>run</tt> : permet de lancer l'exécution du programme dans le debugger. Cette commande accepte
+des arguments qui seront transmis au programme comme arguments de la ligne de commande.
+</li><li>
+<tt>step, next</tt>: permettent d'exécuter une ligne du programme respectivement
+en descendant ou sans descendre dans les appels de fonction.
+</li><li>
+<tt>finish</tt>: reprend l'exécution jusqu'au retour de la fonction en cours.
+</li><li>
+<tt>continue</tt> : reprend l'exécution.
+</li><li>
+<tt>print</tt> : affiche la valeur de l'expression qui lui est donnée en argument
+(en utilisant les valeurs courantes des variables du programme durant l'exécution).
+</li><li>
+<tt>display</tt> : mémorise l'expression qui lui est donnée en argument et affiche sa valeur
+chaque fois que le debugger reprend le contrôle sur l'exécution.
+</li><li>
+<tt>set variable</tt> : prend en argument une affectation à une variable du programme qui sera
+effectuée.
+</li><li>
+<tt>info breakpoints, info displays</tt> : affiche respectivement les points d'arrêt placés et
+les expressions mémorisées pour réévaluation continue.
+</li><li>
+<tt>delete</tt> : supprime le point d'arrêt dont le numéro est donné en argument.
+</li><li>
+<tt>undisplay</tt> : supprime des expressions en évaluation continue, l'expression de numéro donné en argument.
+</li><li>
+<tt>help</tt> : pour connaître les autres possibilités offertes par gdb (syntaxe, effet produit, etc.).
+</li></ul>
+<h4>
+2.3 Observer l'évolution d'une expression</h4>
+On donne l'algorithme de multiplication suivant :
+<p><tt><font size="+1"><b>lexique</b> : x, y, u, v, a :
+des entiers</font></tt>
+<br><tt><font size="+1"><b>algorithme</b> : choisir une valeur pour x;</font></tt>
+<br><tt><font size="+1">
+choisir une valeur pour y;</font></tt>
+<br><tt><font size="+1">
+a &lt;- 0</font></tt>
+<br><tt><font size="+1">
+u &lt;- x</font></tt>
+<br><tt><font size="+1">
+v &lt;- y</font></tt>
+<br><tt><font size="+1">
+<b>tantque</b> <b>non</b> (v = 0)</font></tt>
+<br><tt><font size="+1">
+<b>si</b> <b>non</b> (v mod 2 = 0) <b>alors</b></font></tt>
+<br><tt><font size="+1">
+a &lt;- a + u</font></tt>
+<br><tt><font size="+1">
+u &lt;- 2 * u</font></tt>
+<br><tt><font size="+1">
+v &lt;- v div 2</font></tt>
+</p><p>et le <a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/multiplication.c">programme en C</a> correspondant.
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 2</font></b>
+<blockquote><font color="#CC0000">Compilez le fichier
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/multiplication.c">multiplication.c</a></font></tt>.</font>
+<br><font color="#CC0000">Exécutez le programme obtenu au moyen
+du debugger. Installez un point d'arrêt
+en début de boucle afin d'observer à chaque itération
+la valeur des variables <tt><font size="+1">x</font></tt>, <tt><font size="+1">y</font></tt>,
+<tt><font size="+1">u</font></tt>,
+<tt><font size="+1">v</font></tt>,
+et <tt><font size="+1">a</font></tt> et de l'expression : <tt><font size="+1">u
+* v + a == x * y</font></tt>.</font>
+<br><font color="#CC0000">Que peut-on dire de la valeur de cette expression
+?</font></blockquote>
+</td>
+</tr>
+</tbody></table>
+
+</p><h4>
+2.4 Observer l'exécution d'un programme</h4>
+On donne l'algorithme suivant (fonction de Collatz) :
+<p><tt><font size="+1"><b>lexique</b> : x : un entier</font></tt>
+<br><tt><font size="+1"><b>algorithme</b> : choisir une valeur pour x;</font></tt>
+<br><tt><font size="+1">
+
+<b>tantque</b> <b>non</b> (x = 1)</font></tt>
+<br><tt><font size="+1">
+<b>si</b> x mod 2 = 0 <b>alors</b></font></tt>
+<br><tt><font size="+1">
+x &lt;- x div 2</font></tt>
+<br><tt><font size="+1">
+<b>sinon</b></font></tt>
+<br><tt><font size="+1">
+x &lt;- 3 * x + 1</font></tt>
+<br><tt><font size="+1">
+afficher(x)</font></tt>
+</p><p>et le <a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/syracuse.c">programme en C</a> correspondant.
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 3</font></b>
+<blockquote><font color="#CC0000">Compilez le fichier
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/syracuse.c">syracuse.c</a></font></tt>.
+Exécutez le programme obtenu au moyen du debugger.</font>
+<br><font color="#CC0000">Tracez les valeurs successives de la variable
+x.</font>
+<br><font color="#CC0000">Observez le nombre d'itérations parcourues
+en fonction de la valeur initiale de x (cette valeur initiale peut être
+modifiée via le debugger).</font></blockquote>
+</td>
+</tr>
+</tbody></table>
+
+</p><h4>
+2.5 Diagnostiquer une erreur</h4>
+On donne le programme en C <tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/erreur.c">erreur.c</a></font></tt>
+qui est supposé calculer les deux expressions :
+<ul>
+<li>
+Somme<sub>pour i allant de 1 à n</sub> (1 div (i * (i - 1)))</li>
+
+<li>
+Somme<sub>pour i allant de 1 à n</sub> (1 mod (i * (i - 1)))</li>
+</ul>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 4</font></b>
+<blockquote><font color="#CC0000">Compilez et exécutez le programme
+<tt><font size="+1"><a href="http://inf352.forge.imag.fr/Apnees/Apnee_1/Fichiers_Projet_1/erreur.c">erreur.c</a></font></tt>.
+Constatez qu'il ne fonctionne pas.</font>
+<br><font color="#CC0000">Utilisez le debugger pour
+observer l'exécution du programme et déterminer l'emplacement
+et la nature de l'erreur.</font></blockquote>
+</td>
+</tr>
+</tbody></table>
+<!--
+<center><table>
+<tr>
+<td><img SRC="figureddd.png" ></td>
+</tr>
+
+<caption ALIGN=BOTTOM><i>Fig. 1 - Fenêtre principale de ddd</i></caption>
+</table></center>
+-->
+<!--
+<a NAME="T3"></a>
+<h3>
+3. Bibliographie</h3>
+<a href="C_book.jpg"><img SRC="C_book.jpg" height=50 width=35></a> B. W.
+Kernighan, D. M. Ritchie. Le langage C, norme ANSI. Dunod, Prentice Hall.
+<br><a href="Unix_book.jpg"><img SRC="Unix_book.jpg" height=50 width=33></a>
+C. Pélissier. UNIX: Utilisation, Administration, Réseau Internet.
+Hermes.
+<br>
+<p>
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial">Si vous avez des problèmes
+      avec ADA, vous trouverez des tas d'informations sur internet.
+      Pour commencer, vous pouvez aller voir la <A HREF="http://lglwww.epfl.ch/Ada/">page
+      du Laboratoire de Génie Logiciel (LGL)</A> du Département
+      d'Informatique (DI) de l'Ecole Polytechnique Fédérale
+      de Lausanne (EPFL).</FONT></P>
+ 
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial">Si vous avez des problèmes
+      avec le compilateur Gnat Ada, vous pouvez consulter son <A HREF="../../gnat_rm.html">manuel
+      de référence</A> ou son <A HREF="../../gnat_ug.html">guide
+      de l'utilisateur</A>. Si vous avez des problèmes avec
+      le langage vous pouvez consulter le <A HREF="../../arm95.html">manuel
+      de référence du langage ADA</A>.</FONT></P>
+ 
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial">Si vous avez des problèmes
+      spécifiques, vérifiez s'ils n'ont pas déjà
+      été résolus dans <A HREF="faq.html">la foire
+      aux questions</A>.</FONT></P>
+ 
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial"><HR ALIGN=LEFT></FONT>
+ 
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial">Pour démarrer rapidement
+      vos TP: un bref résumé pour <A HREF="simple-gnat.html">utiliser
+      le compilateur ADA</A> (pour les détails, regardez dans
+      le <A HREF="../../gnat_ug.html">guide de l'utilisateur</A>).</FONT></P>
+ 
+      <P><FONT SIZE="-1" FACE="Helvetica, Arial">Pour ceux qui voudraient se procurer Gnat, on peut trouver les binaires
+Unix et Win32 de la version courante (ainsi que la doc.) sur l'excellent site du
+<a href="ftp://ftp.lip6.fr/pub/gnat">Laboratoire d'Informatique de Paris 6</a>.
+      </FONT></P>
+-->
+
+
+</body></html>

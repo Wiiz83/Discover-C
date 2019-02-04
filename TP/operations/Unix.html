@@ -1,0 +1,465 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-- saved from url=(0052)http://inf352.forge.imag.fr/Apnees/Apnee_1/Unix.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+</head>
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tbody><tr>
+<td valign="TOP" width="553" height="83"></td>
+
+<td valign="TOP" width="100%" height="83"></td>
+
+<td valign="TOP" width="183" height="83"></td>
+</tr>
+</tbody></table>
+
+<center>
+<h3>
+<font color="#3333FF"><font size="+3">L3 Informatique</font></font></h3></center>
+
+<center>
+<h2>
+<font color="#3333FF">Prise en main de l'environnement de développement</font></h2></center>
+
+<center>
+<h3>
+<font color="#3333FF">Partie I : Utilisation d'un interprète de
+commandes Unix</font></h3></center>
+<font color="#3333FF"></font>
+<p><br>
+</p><p>
+</p><hr>
+<h3>
+Contenu</h3>
+Cette partie présente les notions de base permettant d'utiliser
+un interprète de commandes Unix et notamment la manipulation des
+fichiers.
+<p>
+</p><hr>
+<h3 class="Niveau2">
+1 Le répertoire</h3>
+Un répertoire (appelé encore catalogue) contient un ensemble
+de fichiers et/ou de sous-répertoires, un fichier étant composé
+d'un nom et d'un ensemble de données stockées sur disque.
+Vu par l'utilisateur, le système de fichiers est donc organisé
+comme une arborescence dont les noeuds sont des répertoires et les
+feuilles des fichiers simples. A la connexion, un utilisateur se retrouve
+dans un répertoire qui lui est propre (le répertoire d'accueil, de login
+ou "home directory") et qui est destiné à contenir les données
+personnelles de cet utilisateur.
+<h3 class="Niveau2">
+2 Désignation des fichiers et répertoires</h3>
+Un fichier ou répertoire est désigné au moyen d'un
+chemin d'accès, qui indique sa position dans l'arborescence
+globale contenant tous les répertoires gérés par le
+serveur.
+Il existe deux moyens de désigner des objets (fichiers ou répertoires)
+dans une arborescence, la désignation absolue et la désignation
+relative :
+<ul>
+<li>
+La désignation absolue indique le chemin à suivre dans l'arborescence
+globale (depuis la racine désignée par le symbole <tt><font size="+1">/</font></tt>),
+pour accéder à l'objet voulu.</li>
+
+<br>Par exemple, <tt><font size="+1">/a/u1/durand</font></tt> désigne
+l'objet <tt><font size="+1">durand</font></tt> situé dans le répertoire
+<tt><font size="+1">u1</font></tt>
+lui-même situé dans le répertoire
+<tt><font size="+1">a</font></tt>
+sous <tt><font size="+1">/</font></tt>.</ul>
+
+<ul>
+<li>
+La désignation relative précise le chemin à suivre
+pour accéder à l'objet voulu, à partir du répertoire
+courant.</li>
+
+<br>Par exemple, si vous vous trouvez dans le répertoire <tt><font size="+1">/a/u1</font></tt>,
+le nom <tt><font size="+1">durand/programs</font></tt> désigne l'objet
+<tt><font size="+1">programs</font></tt>
+situé dans le répertoire
+<tt><font size="+1">durand</font></tt>
+lui-même situé dans le répertoire courant.</ul>
+Le nom <tt><font size="+1">..</font></tt> est un nom générique,
+qui désigne toujours le répertoire père du répertoire
+courant. Avec l'exemple précédent, le nom <tt><font size="+1">..</font></tt>
+désigne le répertoire
+<tt><font size="+1">/a</font></tt>. Le
+chemin d'accès <tt><font size="+1">../u2</font></tt> désigne
+un objet de nom <tt><font size="+1">u2</font></tt> situé dans le répertoire
+<tt><font size="+1">/a</font></tt>.
+<h3 class="Niveau2">
+3 Changement de répertoire courant (commande <tt><font size="+1">cd</font></tt>)</h3>
+Au moment de votre connexion, vous vous retrouvez dans votre répertoire
+de travail (qui est à ce moment votre répertoire courant).
+<br>Vous pouvez changer de répertoire courant via la commande <tt><font size="+1">cd</font></tt>
+("change directory") :
+<ul>
+<li>
+En tapant : <tt><font size="+1">cd &lt;nom_rep&gt;</font></tt> (<tt><font size="+1">&lt;nom_rep&gt;</font></tt>
+étant un nom absolu ou relatif de répertoire), votre répertoire
+courant devient <tt><font size="+1">&lt;nom_rep&gt;</font></tt>.</li>
+
+<li>
+La commande <tt><font size="+1">cd</font></tt> sans arguments permet de revenir
+à tout moment à votre répertoire d'accueil (le home
+directory).</li>
+
+<li>
+<tt><font size="+1">cd ~&lt;nom d'utilisateur&gt;</font></tt> permet d'aller,
+si les droits le permettent, au répertoire de travail de l'utilisateur
+donné.</li>
+
+<li>
+<tt><font size="+1">cd /</font></tt> permet d'aller à la racine de l'arborescence.</li>
+
+<li>
+<tt><font size="+1">cd ..</font></tt> permet de remonter au répertoire
+père du répertoire courant. Comme dit précédemment,
+quelque soit le répertoire courant, la chaîne <tt><font size="+1">..</font></tt>
+désigne en effet toujours le répertoire père.</li>
+</ul>
+Les commandes <tt><font size="+1">pushd</font></tt> et
+<tt><font size="+1">popd</font></tt>
+permettent également de naviguer dans le système
+de fichiers :
+<ul>
+<li>
+La commande <tt><font size="+1">pushd &lt;repertoire&gt;</font></tt> est équivalente
+à<i> </i><tt><font size="+1">cd &lt;repertoire&gt;</font></tt><i> </i>avec
+la différence que le nom du répertoire initial est
+mémorisé avant le changement de répertoire</li>
+
+<li>
+La commande <tt><font size="+1">popd</font></tt> permet de revenir au répertoire
+antérieur à l'exécution de <tt><font size="+1">pushd</font></tt>.</li>
+
+<li>
+On peut ainsi empiler autant de répertoires que l'on veut avec <tt><font size="+1">pushd
+</font></tt>puis
+les dépiler ensuite avec <tt><font size="+1">popd</font></tt>. On
+peut afficher la liste des répertoires empilés au moyen de
+la commande <tt><font size="+1">dirs</font></tt>.</li>
+</ul>
+
+<h3 class="Niveau2">
+4 Création de répertoire (commande <tt><font size="+1">mkdir</font></tt>)</h3>
+Pour créer un répertoire de nom <tt><font size="+1">&lt;nomrep&gt;</font></tt>,
+il faut utiliser la commande <tt><font size="+1">mkdir &lt;nomrep&gt;</font></tt>.
+Le répertoire créé pourra contenir des fichiers ou
+des sous-répertoires, de la même façon que votre répertoire
+d'accueil.
+<h3 class="Niveau2">
+5 Connaissance du répertoire courant (commande <tt><font size="+1">pwd</font></tt>)</h3>
+La commande <tt><font size="+1">pwd</font></tt> ("print working directory")
+permet de connaître le répertoire courant dans lequel on se
+situe à un instant donné : cette commande affiche le nom
+absolu du répertoire courant.
+<h3 class="Niveau2">
+6 Copie d'un répertoire (commande <tt><font size="+1">cp -r</font></tt>)</h3>
+La commande <tt><font size="+1">cp</font></tt>, utilisée avec l'option
+<tt><font size="+1">-r</font></tt>
+et appliquée à un répertoire, permet de copier récursivement
+ce répertoire et son contenu, en incluant les sous-répertoires
+et les fichiers que ceux-ci contiennent. Par exemple la commande
+<blockquote><tt><font size="+1">cp -r rép1 rép2</font></tt></blockquote>
+crée une copie de <tt><font size="+1">rép1</font></tt> dans
+<tt><font size="+1">rép2</font></tt>
+si <tt><font size="+1">rép2</font></tt> existe déjà,
+ou bien crée une copie de <tt><font size="+1">rép1</font></tt>
+appelée <tt><font size="+1">rép2</font></tt> dans le cas contraire.
+<br>
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 1</font></b>
+<ul>
+<li>
+<font color="#CC0000">Quel est le nom absolu de votre répertoire
+principal ?</font></li>
+
+<li>
+<font color="#CC0000">Créez dans votre répertoire courant
+un répertoire nommé
+<tt><font size="+1">Projet</font></tt>.
+Créez dans ce répertoire un répertoire <tt><font size="+1">Seance1.</font></tt></font></li>
+
+<li>
+<font color="#CC0000">Placez-vous dans ce nouveau
+répertoire <tt><font size="+1">Seance_1.</font></tt> Quel est le nom absolu
+du répertoire courant ?</font></li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau2">
+7 Consultation d'un répertoire (commande <tt><font size="+1">ls</font></tt>)</h3>
+La commande <tt><font size="+1">ls</font></tt> ("list directory") permet
+de lister le contenu d'un répertoire. Cette commande offre la possibilité
+d'être utilisée avec des options qui permettent de la spécialiser.
+<ul>
+<li class="Liste">
+<tt><font size="+1">ls</font></tt> affiche en colonnes les noms des objets
+(fichiers et sous-répertoires) dont le premier caractère
+est différent du caractère <tt><font size="+1">'.'</font></tt>
+(point).</li>
+
+<li class="Liste">
+<tt><font size="+1">ls -a</font></tt> affiche tous les noms des objets du
+répertoire courant, quelque soit leur nom.</li>
+
+<li class="Liste">
+<tt><font size="+1">ls -l</font></tt> liste les fichiers sur une colonne,
+avec des informations sur les droits d'accès, sur le propriétaire
+de l'objet, la taille et la date de dernière modification.</li>
+
+<li class="Liste">
+<tt><font size="+1">ls -al</font></tt> combine les deux options <tt><font size="+1">-a</font></tt>
+et <tt><font size="+1">-l</font></tt>.</li>
+
+<li class="Liste">
+<tt><font size="+1">ls -R</font></tt> permet de visualiser le contenu d'un
+répertoire ainsi que celui de ses sous-répertoires (affichage
+récursif).</li>
+
+<li class="Liste">
+<tt><font size="+1">ls &lt;nom d'objet&gt; ...</font></tt> affiche le nom des
+fichiers et le contenu des répertoires dont les noms sont passés
+en paramètres. Par exemple, <tt><font size="+1">ls exemple.texte </font></tt>affiche
+le nom de l'objet <tt><font size="+1">exemple.texte</font></tt>, s'il existe
+dans le répertoire courant ; dans la négative, la commande
+indique qu'il n'existe aucun objet de ce nom. De la même façon,
+<tt><font size="+1">ls
+repertoire1</font></tt> affiche le contenu de l'objet
+<tt><font size="+1">repertoire1</font></tt>,
+s'il existe dans le répertoire courant.</li>
+
+<li>
+<tt><font size="+1">ls -d &lt;nom d'objet&gt; ...</font></tt> affiche le nom
+des fichiers <i>ou</i> des répertoires dont les noms sont passés
+en paramètres. Par exemple, <tt><font size="+1">ls -d unDossier</font></tt>
+affiche le nom du répertoire <tt><font size="+1">unDossier</font></tt>,
+s'il existe dans le répertoire courant.</li>
+</ul>
+
+<h3 class="Niveau2">
+8 Les caractères spéciaux</h3>
+Pour toutes les commandes qui acceptent un ou plusieurs noms de fichiers ou répertoires en paramètre,
+on peut utiliser des caractères spéciaux facilitant l'écriture
+de la commande. Ces caractères spéciaux sont remplacés par toutes les possibilités de caractères normaux
+permettant de compléter un nom existant dans le système de fichier. S'il n'y a aucune correspondance dans
+le système de fichiers, les caractères spéciaux sont conservés inchangés. Ces caractères spéciaux sont :
+<ul>
+<li class="Liste">
+<tt><font size="+1">'?'</font></tt> permet de remplacer un caractère
+quelconque. Par exemple, <tt><font size="+1">ls fic?</font></tt> liste tous
+les objets dont les noms sont composés de 4 lettres les trois premières
+étant <tt><font size="+1">fic</font></tt>.</li>
+
+<li class="Liste">
+<tt><font size="+1">'*'</font></tt> remplace n'importe quelle chaîne
+de caractères, y compris la chaîne vide. Par exemple, la commande
+<tt><font size="+1">ls
+fic*</font></tt> liste tous les objets de trois lettres ou plus, commençant
+par <tt><font size="+1">fic</font></tt>.</li>
+
+<li class="Liste">
+<tt><font size="+1">[&lt;une suite de caractères&gt;]</font></tt>. Une
+suite de caractères entre crochets désigne un caractère
+pris parmi ceux de la suite. Par exemple, <tt><font size="+1">ls fic[123]</font></tt>
+liste parmis les fichiers <tt><font size="+1">fic1 fic2 fic3</font></tt> ceux présents dans
+le répertoire courant.<br>
+Deux caractères séparés par un tiret entre crochets
+(par exemple <tt><font size="+1">[a-d]</font></tt>) désigne un caractère
+se trouvant lexicalement compris entre les deux caractères spécifiés.
+Ainsi, <tt><font size="+1">ls fic[a-d]</font></tt> est équivalent
+à <tt><font size="+1">ls fic[abcd]</font></tt>.
+</li></ul>
+Pour manipuler un objet dont le nom contient un caractère spécial,
+il faut indiquer explicitement à l'interprète de commandes
+de ne pas prendre en compte ce caractère spécial en le faisant
+précéder du caractère <tt><font size="+1">'\'</font></tt>.
+Par exemple, pour lister un fichier de nom <tt><font size="+1">fic*</font></tt>,
+il faut taper <tt><font size="+1">ls fic\*</font></tt>.
+<!--L'utilisateur peut
+ainsi au moyen des caractères spéciaux définir
+des patrons, des modèles d'expressions, que l'on appelle des <i>expressions
+régulières.
+-->
+<br>
+<h3 class="Niveau2">
+9 Compléter automatiquement le nom d'un fichier</h3>
+Il s'agit d'un moyen ("completion") qu'offre l'interprète de commandes
+pour compléter automatiquement les noms de fichiers cités
+dans une commande Unix. On dispose de 2 touches dont la frappe a les significations
+suivantes :
+<ul>
+<li>
+<tt><font size="+1">Escape</font></tt> (touche d'échappement) frappée
+deux fois : donne la liste des noms pouvant compléter la commande en cours de saisie.</li>
+
+<li>
+<tt><font size="+1">Tab</font></tt> (touche de tabulation): tente de compléter
+le nom en cours de saisie.</li>
+</ul>
+Par exemple, après avoir tapé la séquence de caractères
+<tt><font size="+1">more
+~durand/sean</font></tt>, la frappe de la touche
+<tt><font size="+1">tab</font></tt>,
+déclenche le remplacement par l'interprète de la séquence
+déjà frappée par une chaîne de caractères
+composée du mot <tt><font size="+1">more</font></tt> suivi de l'ensemble
+des noms de fichiers ou de répertoires qui se trouvent sous le répertoire
+<tt><font size="+1">~durand</font></tt>
+et dont le nom commence par <tt><font size="+1">sean</font></tt>.
+<h3 class="Niveau2">
+10 Copie de fichiers (commande <tt><font size="+1">cp</font></tt>)</h3>
+La commande <tt><font size="+1">cp</font></tt> permet de créer une
+copie d'un fichier. Par exemple, <tt><font size="+1">cp f1 f2</font></tt>
+copie le contenu de <tt><font size="+1">f1</font></tt> dans un fichier de
+nom <tt><font size="+1">f2</font></tt>. Attention, si
+<tt><font size="+1">f2</font></tt>
+existe déjà, son contenu est écrasé et perdu
+!
+<h3 class="Niveau2">
+11 Renommage d'un fichier (commande <tt><font size="+1">mv)</font></tt></h3>
+La commande <tt><font size="+1">mv</font></tt> permet de changer le nom d'un
+fichier. Par exemple, <tt><font size="+1">mv f1 f2</font></tt> renomme <tt><font size="+1">f1</font></tt>
+en <tt><font size="+1">f2</font></tt>. Il n'existe alors plus de fichier
+de nom <tt><font size="+1">f1</font></tt>.
+<br>
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 2</font></b>
+<ul>
+<li>
+<font color="#CC0000">Copiez dans le répertoire courant (<tt><font size="+1">Seance_1</font></tt>)
+l'ensemble des fichiers qui se trouvent dans votre répertoire principal.</font></li>
+
+<li>
+<font color="#CC0000">Essayez la commande <tt><font size="+1">ls</font></tt>
+avec les options <tt><font size="+1">-a</font></tt>, et <tt><font size="+1">-l</font></tt>.</font></li>
+
+<li>
+<font color="#CC0000">Essayez également l'utilisation des caractères
+spéciaux avec <tt><font size="+1">ls</font></tt> : faites afficher
+tous les fichiers dont le nom se termine par <tt><font size="+1">.c</font></tt>.</font></li>
+
+<li><font color="#CC0000">Avec la commande <tt><font size="+1">pushd</font></tt> allez
+dans le répertoire racine (/). Vous devez voir le répertoire
+<tt><font size="+1">bin</font></tt>
+qui contient les exécutables (programmes) d'un certain nombre de
+commandes Unix. Affichez les fichiers de ce répertoire dont les
+noms contiennent exactement 3 caractères. Revenez dans
+votre répertoire de départ avec la commande <tt><font size="+1">popd.</font></tt></font></li><font color="#CC0000">
+</font></ul><font color="#CC0000">
+</font></td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau2">
+12 Consultation du contenu d'un fichier (commandes <tt><font size="+1">more</font></tt>,
+<tt><font size="+1">cat</font></tt>)</h3>
+Pour afficher le contenu d'un fichier contenant un texte court, on peut
+utiliser la commande <tt><font size="+1">cat</font></tt>. Cette commande
+prend en paramètre(s) le nom du ou des fichiers que l'on souhaite
+afficher.
+Pour visualiser plus facilement les fichiers texte de grande taille,
+il existe une autre commande appelée <tt><font size="+1">more</font></tt>.
+Cette commande affiche le fichier page par page, une page correspondant
+à la quantité de données visualisable dans la fenêtre
+courante. Dans chaque page affichée par <tt><font size="+1">more</font></tt>
+il est possible, par exemple, de passer à la page suivante (entrée) ou de
+quitter la commande (q).
+<br>
+<h3 class="Niveau2">
+13 Destruction d'un fichier</h3>
+La commande <tt><font size="+1">rm</font></tt> permet de détruire
+des fichiers. Attention, le système Unix ne permet aucune récupération
+des fichiers supprimés. L'option
+<tt><font size="+1">-i</font></tt>
+permet cependant d'obtenir une demande de confirmation avant suppression
+de chaque fichier. On peut détruire des répertoires au moyen
+de la commande <tt><font size="+1">rmdir</font></tt> ("remove directory").
+Cette commande ne peut être exécutée que que si les
+répertoires à détruire sont vides (attention aux fichiers
+cachés dont le nom commence par un point).
+<h3 class="Niveau2">
+14 Recherche par rapport au contenu d'un fichier (commande <tt><font size="+1">grep</font></tt>)</h3>
+La commande <tt><font size="+1">grep</font></tt> permet de rechercher une
+chaîne de caractères dans un ou plusieurs fichiers. Plus précisément,
+étant donné une chaîne de caractères et un ensemble
+de noms de fichiers, <tt><font size="+1">grep</font></tt> va rechercher quels
+fichiers contiennent cette chaîne. Par exemple :<br>
+<tt><font size="+1">grep "f1(" *.c</font></tt><br>
+recherche quels sont les fichiers suffixés par
+<tt><font size="+1">.c</font></tt>
+qui contiennent la chaîne <tt><font size="+1">f1(</font></tt>
+<br>
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 3</font></b>
+<ul>
+<li><font color="#CC0000">A l'aide de la commande <tt><font size="+1">grep</font></tt>
+cherchez, parmi les fichiers du répertoire courant, les noms de
+ceux qui contiennent la chaîne <tt><font size="+1">main</font></tt>.</font></li><font color="#CC0000">
+</font></ul><font color="#CC0000">
+</font></td>
+</tr>
+</tbody></table>
+
+<h3>
+15 Création / modification du contenu d'un fichier texte</h3>
+Vous disposez dans l'environnement de développement de l'UFRIMA,
+sur les serveurs mais aussi sur les postes de travail sous Linux, de plusieurs
+éditeurs de texte. Les uns fonctionnent en mode console, les autres
+en mode graphique. Ces éditeurs sont selon le cas plus ou moins
+faciles à prendre en main, plus ou moins adaptés à
+un type d'utilisation particulier, etc.
+<!--
+<p>Il vous est fortement conseillé d'utiliser l'éditeur <font size=+2>nedit</font>
+: cet éditeur fonctionne en mode graphique, il est puissant et plutôt
+ergonomique.
+-->
+<br>
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 4</font></b>
+<ul>
+<li>
+<font color="#CC0000">Créez et sauvegardez dans votre répertoire
+d'accueil un fichier nommé CV contenant les informations suivantes
+(une information par ligne) vous <nobr>concernant :</nobr> nom, prénom, groupe
+de TD, baccalauréat d'origine, filière suivie l'année
+dernière.</font></li>
+
+<li>
+<font color="#CC0000">Après avoir sauvegardé le fichier créé,
+ré-ouvrez le fichier afin de lui ajouter
+une ligne précisant les langages de programmation que vous avez
+déjà pratiqués.</font></li>
+
+<li>
+<font color="#CC0000">Après avoir à nouveau quitté
+votre éditeur, vérifiez que vous pouvez afficher le contenu du fichier CV,
+par exemple au moyen de la commande cat.</font></li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+
+<p><b>Recommendation : </b>Par la suite, lorsque vous aurez besoin d'observer
+le contenu d'un fichier texte sans toutefois avoir besoin de le modifier,
+n'utilisez pas un éditeur de texte : utilisez soit la commande <tt><font size="+1">cat</font></tt>
+(si le fichier est court) soit la commande <tt><font size="+1">more</font></tt> (si
+le fichier n'est pas affichable en entier dans la fenêtre de terminal).
+
+
+</p></body></html>

@@ -1,0 +1,756 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-- saved from url=(0058)http://inf352.forge.imag.fr/Apnees/Apnee_1/UnixAvance.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (X11; U; Linux 2.4.20-verimag i686) [Netscape]">
+   <title>1  Opérations de base avec les fichiers-rappels</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tbody><tr>
+<td valign="TOP" width="553" height="83"></td>
+
+<td valign="TOP" width="100%" height="83"></td>
+
+<td valign="TOP" width="183" height="83"></td>
+</tr>
+</tbody></table>
+
+<center>
+<h2>
+<font color="#3333FF">L3 Informatique</font></h2></center>
+
+<center>
+<h2>
+<font color="#3333FF">Prise en main de l'environnement de développement</font></h2></center>
+
+<center>
+<h3>
+<font color="#3333FF">Partie III : Commandes Avancées en Unix</font></h3></center>
+
+<hr>
+<h3>
+Contenu</h3>
+Cette partie constitue un complément de la partie I, elle introduit
+des notions plus avancées de l'environnement de travail Unix.
+<p><b><font size="+1">1. Les manuels en ligne</font></b>
+</p><p>La commande
+<tt><font size="+1">man</font></tt> permet d'obtenir des informations
+sur le fonctionnement d'une commande (en particulier, sur les options disponibles).
+Elle est invoquée de la façon suivante :
+</p><blockquote><tt><font size="+1">man [&lt;numéro-du-manuel&gt;] &lt;nom-de-la-commande&gt;</font></tt></blockquote>
+Le numéro du manuel est optionnel. La commande particulière
+<tt><font size="+1">man
+intro</font></tt> donne la liste des commandes disponibles. Les manuels
+sont organisés de la manière suivante <font face="Times New Roman,Times">:</font>
+<ul>
+<li>
+<tt><font size="+1">man 1</font></tt> : <font face="Times New Roman,Times">commandes
+principales (les commandes étudiées jusqu'ici se trouvent
+dans ce manuel)</font></li>
+
+<li>
+<tt><font size="+1">man 2</font></tt> : <font face="Times New Roman,Times">appels
+systèmes</font></li>
+
+<li>
+<tt><font size="+1">man 3</font></tt> : <font face="Times New
+Roman,Times">fonctions de bibliothèques</font></li>
+
+<li>
+<tt><font size="+1">man 4</font></tt> : <font face="Times New Roman,Times">fichiers
+spéciaux</font></li>
+
+<li>
+<tt><font size="+1">man 5</font></tt> : <font face="Times New Roman,Times">format
+de différents fichiers</font></li>
+
+<li>
+<tt><font size="+1">man 6</font></tt> : <font face="Times New Roman,Times">démos</font></li>
+
+<li>
+<tt><font size="+1">man 7</font></tt> : <font face="Times New Roman,Times">environnements</font></li>
+
+<li>
+<tt><font size="+1">man 8</font></tt> : <font face="Times New Roman,Times">commandes
+de maintenance</font></li>
+</ul>
+<font face="Times New Roman,Times">Il existe également une version
+graphique du manuel en ligne, accessible par la commande </font><tt><font size="+1">xman</font></tt>.
+<br>Et surtout, n'oubliez pas la principale commande à retenir :
+<tt><font size="+1">man
+man</font></tt> (ou comment utiliser les manuels en ligne) !
+<h3 class="Niveau2">
+2 Recherche de fichiers (commande <tt><font size="+1">find</font></tt>)</h3>
+La commande <tt><font size="+1">find</font></tt> permet de rechercher des
+fichiers dans une arborescence du système de fichiers, et éventuellement
+d'appliquer une commande à chacun des fichiers trouvés.
+<br>La commande <tt><font size="+1">find &lt;nom_de_répertoire&gt; &lt;expression&gt;</font></tt>
+parcourt récursivement le répertoire dont le nom est fourni
+en 1er paramètre, en évaluant pour chaque fichier l'expression
+booléenne passée en 2nd paramètre. Cette expression
+est formée à partir d'opérateurs dont quelques uns
+sont donnés ci-dessous :
+<ul>
+<li class="Liste">
+<tt><font size="+1">-name &lt;nom_de_fichier, ou patron entouré de
+""&gt;</font></tt> : vrai si le nom du fichier correspond au nom donné</li>
+
+<li class="Liste">
+<tt><font size="+1">-type &lt;type de fichier&gt;</font></tt> : vrai si le type
+du fichier correspond à celui passé en opérande :
+<tt><font size="+1">f</font></tt>
+pour fichier ordinaire, <tt><font size="+1">d</font></tt> pour répertoire.</li>
+
+<li class="Liste">
+<tt><font size="+1">-print</font></tt> : toujours vrai, permet de visualiser
+les noms des fichiers consultés par la commande <tt><font size="+1">find</font></tt>.</li>
+
+<li class="Liste">
+<tt><font size="+1">-newer &lt;nom_de_fichier&gt;</font></tt> : vrai si le fichier
+a été modifié plus récemment que le fichier
+dont le nom est passé en opérande.</li>
+
+<li class="Liste">
+<tt><font size="+1">-exec &lt;commande&gt;</font></tt> : exécute la commande
+donnée en opérande. Le symbole {} utilisé en
+paramètre de la commande désigne le fichier en cours d'examen.
+L'expression doit se terminer par la chaîne de caractères
+<tt><font size="+1">\;</font></tt>.</li>
+</ul>
+Exemples:
+<blockquote><tt><font size="+1">find . -type d</font></tt> : affiche la liste
+des répertoires se trouvant sous le répertoire courant.
+<br><tt><font size="+1">find / -name passwd</font></tt> : affiche tous les
+fichiers de nom <tt><font size="+1">passwd</font></tt> se trouvant directement
+ou indirectement sous <tt><font size="+1">/</font></tt>.
+<br><tt><font size="+1">find . -type d -exec ls -l {} \;</font></tt> : permet
+de lister récursivement tous les répertoires à partir
+du répertoire courant.</blockquote>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 1</font></b>
+<p><font color="#CC0000">Trouvez la commande permettant de rechercher récursivement
+tous les fichiers d'un nom donné dans le répertoire courant
+et dans tous ses sous-répertoires.</font></p></td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau2">
+3 Comparaison de fichiers</h3>
+La commande <tt><font size="+1">diff &lt;f1&gt; &lt;f2&gt;</font></tt> imprime
+les lignes qui diffèrent entre deux fichiers <tt><font size="+1">&lt;f1&gt;</font></tt>
+et <tt><font size="+1">&lt;f2&gt;</font></tt>.
+<h3 class="Niveau2">
+4 Droits associés aux fichiers et répertoires</h3>
+Tout utilisateur est repéré
+dans le système Unix par un identificateur unique appelé
+"<i>user id</i>" (<i>uid</i>).
+Dans Unix, les utilisateurs appartiennent également à des
+groupes, identifiés par d'autres identificateurs uniques ("<i>group
+id</i>" ou <i>gid</i>). La commande <tt><font size="+1">id</font></tt>
+permet d'obtenir
+<i>l'uid</i> et le <i>gid</i> de l'utilisateur courant.
+<p>Les fichiers et répertoires sont associés à des
+droits de manipulation qui dépendent de l'utilisateur courant. Le
+système Unix permet de restreindre les droits d'accès à
+un fichier ou répertoire en fonction du groupe de l'utilisateur
+courant, si celui-ci n'est pas le propriétaire du fichier ou répertoire.
+Plus précisément, considérons la ligne suivante, obtenue
+avec la commande <tt><font size="+1">ls -l</font></tt> :
+</p><blockquote><tt><font size="+1">-rwxr-xr-- 1 durand staff 12543 Sep 24 17:54
+TD1</font></tt></blockquote>
+Les différentes informations doivent être interprétées
+selon le tableau ci-dessous :
+<br>
+<center><table border="" nosave="">
+<tbody><tr align="CENTER" nosave="">
+<td>type</td>
+
+<td>user rights</td>
+
+<td>group rights</td>
+
+<td>others rights</td>
+
+<td></td>
+
+<td>owner</td>
+
+<td>group</td>
+
+<td>size</td>
+
+<td>last modification</td>
+
+<td nosave="">name</td>
+</tr>
+
+<tr align="CENTER" nosave="">
+<td><tt><font size="+1">-</font></tt></td>
+
+<td><tt><font size="+1">rwx</font></tt></td>
+
+<td><tt><font size="+1">r-x</font></tt></td>
+
+<td><tt><font size="+1">r--</font></tt></td>
+
+<td><tt><font size="+1">1</font></tt></td>
+
+<td><tt><font size="+1">durand</font></tt></td>
+
+<td nosave=""><tt><font size="+1">staff</font></tt></td>
+
+<td><tt><font size="+1">12543</font></tt></td>
+
+<td><tt><font size="+1">Sep 24 17:54</font></tt></td>
+
+<td><tt><font size="+1">TD1</font></tt></td>
+</tr>
+</tbody></table></center>
+
+<p>Ce tableau montre les points suivants:
+</p><ul>
+<li class="Liste">
+le fichier <tt><font size="+1">TD1</font></tt> a été modifié
+pour la dernière fois le 24 septembre à 17H54</li>
+
+<li class="Liste">
+sa taille en octets est 12543</li>
+
+<li class="Liste">
+le groupe associé au fichier est <tt><font size="+1">staff</font></tt></li>
+
+<li class="Liste">
+l'utilisateur qui possède ce fichier est <tt><font size="+1">durand</font></tt></li>
+
+<li class="Liste">
+le fichier est un fichier ordinaire (un répertoire est représenté
+par <tt><font size="+1">d</font></tt>, un lien par <tt><font size="+1">l</font></tt>)</li>
+
+<li class="Liste">
+<tt><font size="+1">durand</font></tt> a le droit de lire, modifier et exécuter
+<tt><font size="+1">TD1</font></tt>
+(<tt><font size="+1">rwx</font></tt> pour "read", "write" et "execute")</li>
+
+<li class="Liste">
+les membres du groupe <tt><font size="+1">staff</font></tt> ont le droit
+de lire et exécuter <tt><font size="+1">TD1</font></tt> (<tt><font size="+1">r-x</font></tt>)</li>
+
+<li class="Liste">
+les autres utilisateurs ont le droit en lecture uniquement (<tt><font size="+1">r--</font></tt>)</li>
+</ul>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 2</font></b>
+<ul>
+<li>
+<font color="#CC0000">Examinez les informations du fichier ou répertoire
+désigné par le chemin
+<tt><font size="+1">/usr/include/stdio.h</font></tt>.</font></li>
+
+<li>
+<font color="#CC0000">Déterminez s'il s'agit d'un fichier ou bien
+d'un répertoire</font></li>
+
+<li>
+<font color="#CC0000">A quel groupe appartient cette entrée ?</font></li>
+
+<li>
+<font color="#CC0000">Quel en est le propriétaire ?</font></li>
+
+<li>
+<font color="#CC0000">Quels sont les droits d'accès des différents
+utilisateurs ?</font></li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau2">
+5 Archivage et compression de répertoires et fichiers</h3>
+L'archivage et la compression de répertoires et fichiers peuvent
+être requis pour effectuer des sauvegardes de données, ou
+bien pour transférer des données sur le réseau, par
+exemple d'un utilisateur à un autre. La commande <tt><font size="+1">tar</font></tt>
+permet de produire une archive à partir d'un répertoire donné
+:
+<blockquote><tt><font size="+1">tar cvf &lt;nom_archive&gt;.tar &lt;nom_répertoire&gt;</font></tt></blockquote>
+L'archive créée contient toutes les données se trouvant
+dans le répertoire désigné par <tt><font size="+1">&lt;nom_répertoire&gt;</font></tt>,
+ainsi que l'information décrivant l'organisation de ces données.
+<br>La commande qui permet de reconstituer ou de reproduire les données
+archivées, selon leur organisation initiale est la suivante :
+<blockquote><tt><font size="+1">tar xvf &lt;nom_archive&gt;.tar</font></tt></blockquote>
+La compression est un mécanisme qui permet de réduire la
+taille occupée par des données en leur appliquant un algorithme
+de compression. Les commandes <tt><font size="+1">gzip</font></tt> et <tt><font size="+1">gunzip</font></tt>
+effectuent respectivement la compression et la décompression d'un
+fichier :
+<blockquote>
+<li>
+<tt><font size="+1">gzip &lt;nom_fichier&gt;</font></tt> produit un fichier
+compressé de nom <tt><font size="+1">&lt;nom_fichier&gt;.gz</font></tt></li>
+
+<li>
+<tt><font size="+1">gunzip &lt;nom_fichier&gt;.gz</font></tt> reconstitue un
+fichier de nom <tt><font size="+1">&lt;nom_fichier&gt;</font></tt></li>
+</blockquote>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 3</font></b>
+<ol type="a">
+<li>
+<font color="#CC0000">Créez une archive compressée de votre
+répertoire <tt><font size="+1">Projet/Seance1</font></tt> (appelez la <tt><font size="+1">TEST.tar.gz</font></tt>).</font></li>
+
+<li>
+<font color="#CC0000">Créez un nouveau répertoire temporaire
+(<tt><font size="+1">ESSAI</font></tt>).</font></li>
+
+<li>
+<font color="#CC0000">Copiez <tt><font size="+1">TEST.tar.gz </font></tt>dans
+<tt><font size="+1">ESSAI</font></tt>.</font></li>
+
+<li>
+<font color="#CC0000">Allez dans <tt><font size="+1">ESSAI</font></tt> et
+reproduisez le répertoire <tt><font size="+1">TEST</font></tt> à
+partir de son archive.</font></li>
+</ol>
+</td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau1">
+6. Notion de processus</h3>
+Un processus est un programme en cours d'exécution. A un instant
+donné, plusieurs processus peuvent s'exécuter sur un même
+ordinateur. Les processus interviennent non seulement pour l'exécution
+des programmes utilisateur (vos programmes écrits en Ada, C, etc.)
+mais également pour l'interprétation des commandes que l'utilisateur
+tape au clavier.
+<h3 class="Niveau2">
+<font size="+0">6.1 Identification d'un processus (commande </font><tt>ps</tt><font size="+0">)</font></h3>
+Chaque processus est identifié par un numéro unique dans
+le système (<i>pid</i>, pour "process identifier"). C'est au moyen
+de cette identificateur qu'un utilisateur pourra agir sur un processus
+(l'arrêter, le redémarrer, etc). La commande <tt><font size="+1">ps</font></tt>
+("process status") permet de connaître les identificateurs des processus
+actifs (c.à.d en cours d'exécution) à un instant donné.
+Il existe un grand nombre d'options associées à cette commande.
+Par exemple :
+<ul>
+<li>
+<tt><font size="+1">ps</font></tt> liste les processus associés au
+terminal utilisé, en indiquant pour chaque processus son <i>pid</i>,
+l'identification du terminal, le temps d'exécution écoulé
+et le nom du programme exécuté par le processus</li>
+
+<li>
+<tt><font size="+1">ps -u &lt;nom-d'utilisateur&gt;</font></tt> liste les processus
+s'exécutant pour le compte de l'utilisateur indiqué</li>
+
+<li>
+<tt><font size="+1">ps -ef</font></tt> affiche de manière détaillée
+la liste de tous les processus actifs du système.</li>
+</ul>
+Voici un exemple de résultat produit par l'exécution de la
+commande <tt><font size="+1">ps</font></tt> :
+<blockquote><tt><font size="+1">PID TTY S TIME COMMAND</font></tt>
+<br><tt><font size="+1">2973 pts/1 S 0:01 -tcsh</font></tt>
+<br><tt><font size="+1">3058 pts/1 S 0:02 xemacs</font></tt></blockquote>
+Les informations affichées indiquent qu'il y a deux processus actifs,
+l'un exécutant le programme <tt><font size="+1">tcsh</font></tt> (dont
+on verra l'utilité plus loin) et l'autre exécutant le programme
+<tt><font size="+1">xemacs</font></tt>.
+Les identificateurs de ces deux processus sont respectivement <tt><font size="+1">2973</font></tt>
+et <tt><font size="+1">3058</font></tt>. Les deux processus ont été
+lancés depuis le terminal
+<tt><font size="+1">pts/1</font></tt>;
+leurs temps totaux d'exécution sont donnés dans la colonne
+<tt><font size="+1">TIME</font></tt>.
+<h4 class="Niveau2">
+6.2 Tâches de fond</h4>
+Quand vous démarrez l'exécution d'un programme, vous perdez
+la main (vous ne pouvez plus taper de nouvelles commandes) jusqu'à
+la fin de l'exécution du programme.
+<br>Vous pouvez vous affranchir de cette contrainte en demandant que le
+processus démarré soit exécuté en tâche
+de fond. Pour cela, il faut faire suivre l'invocation du programme par
+le symbole '<tt><font size="+1">&amp;</font></tt>' (option "background").
+Si vous avez déjà lancé l'exécution d'un programme
+sans cette option et que vous souhaitez le faire passer en tâche
+de fond pour reprendre la main, vous devez interrompre ce programme en
+frappant la combinaison de touches <tt><font size="+1">Ctrl-z</font></tt>,
+suivie de la commande <tt><font size="+1">bg</font></tt>.
+<br>Par la suite, la commande <tt><font size="+1">fg</font></tt> (pour "foreground")
+vous permettra, si besoin est, de faire revenir votre programme en tâche
+de premier plan. Il vous suffira de taper la commande
+<tt><font size="+1">fg
+&lt;numéro-de-job&gt;</font></tt>, le numéro de "job" étant
+accessible au travers de la commande <tt><font size="+1">jobs</font></tt>.
+<br>
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 4</font></b>
+<ol type="a">
+<li>
+<font color="#CC0000">Lancez le programme nedit.</font></li>
+
+<li>
+<font color="#CC0000">Stoppez l'exécution de ce programme pour la
+faire passer en tâche de fond.</font></li>
+
+<li>
+<font color="#CC0000">Faites revenir l'exécution du programme en
+tâche normale (1er plan).</font></li>
+</ol>
+</td>
+</tr>
+</tbody></table>
+
+<h4 class="Niveau2">
+6.3 Abandon d'un processus (séquence de touches <tt><font size="+1">Ctrl-c</font></tt>
+et commande <tt><font size="+1">kill</font></tt>)</h4>
+Pour "tuer" un processus en cours d'exécution, il existe deux moyens
+:
+<ul>
+<li>
+La commande <tt><font size="+1">kill</font></tt> suivie de l'option <tt><font size="+1">-9</font></tt>
+et de l'identificateur du processus à tuer.</li>
+
+<li>
+La séquence de touches <tt><font size="+1">Ctrl-c</font></tt> si le
+processus visé ne s'exécute pas en tâche de fond;
+le pointeur graphique (souris) doit se trouver dans la fenêtre dans
+laquelle ce processus a été lancé.</li>
+</ul>
+
+<h4 class="Niveau2">
+6.4 Redirection des entrées/sorties d'un programme</h4>
+
+<ul>
+<li>
+<b>Les entrées/sorties standard</b></li>
+
+<br>Sous Unix, la plupart des programmes peuvent être considérés
+comme une fonction de transformation qui, appliquée à un
+flot de données fournies en <i>entrée</i>, produit un flot
+de résultats délivrés en <i>sortie</i> ainsi qu'un
+flot d'éventuels messages d'<i>erreur</i>.
+<br>L'entrée standard de tout processus (exécutant un programme
+ou une commande Unix) est le clavier.
+<br>De même la sortie standard de tout processus est l'écran.
+<br>La sortie standard pour les erreurs détectées pendant
+l'exécution d'un processus est également l'écran.
+<br>
+<li>
+<b>Redirection des sorties d'un processus dans un fichier</b></li>
+
+<br>Il existe un mécanisme permettant de rediriger les sorties d'un
+programme dans un fichier. Pour cela, il faut faire suivre l'appel du programme
+par le symbole '<tt><font size="+1">&gt;</font></tt>' suivi du nom de fichier
+voulu. Exemple : <tt><font size="+1">nomprog &gt; nomfichier</font>.</tt>
+<br>Cette possibilité est notamment intéressante lorsque
+la quantité de données affichée est importante, et
+que l'on souhaite pouvoir vérifier la bonne exécution d'un
+programme en étudiant les traces de ses exécutions.
+<br>En utilisant <tt><font size="+1">&gt;&gt;</font></tt> au lieu de <tt><font size="+1">&gt;</font></tt>,
+les résultats produits par le programme sont alors ajoutés
+à la fin du fichier indiqué.
+<br>Attention, avec la commande de redirection <tt><font size="+1">&gt;</font></tt>,
+il est possible d'écraser accidentellement des fichiers (si les
+fichiers vers lesquels on redirige la sortie existent déjà
+et contiennent d'autres informations). Il est possible d'éviter
+celà en configurant l'interpréteur de commandes de façon
+adéquate.
+<br>
+<li>
+<b>Redirection des entrées d'un processus depuis un fichier</b></li>
+
+<br>Il est également possible de rediriger les entrées d'un
+programme, afin que celui-ci reçoive ses données non pas
+du clavier mais depuis un fichier. Pour cela, il faut faire suivre l'appel
+du programme par le symbole '<tt><font size="+1">&lt;</font></tt>' suivi
+du nom du fichier d'entrée.</ul>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 5</font></b>
+<ol>
+<li>
+<font color="#CC0000">Redirigez les sorties de la commande <tt><font size="+1">ls</font></tt>
+appliquée au répertoire courant dans un fichier <tt><font size="+1">ls_res</font></tt>.</font></li>
+
+<li>
+<font color="#CC0000">Recommencez en ajoutant la sortie de la commande
+<tt><font size="+1">ls</font></tt>
+au fichier <tt><font size="+1">ls_res</font></tt>.</font></li>
+
+<li>
+<font color="#CC0000">Que fait la commande suivante : <tt><font size="+1">cat
+ls_res &gt; f</font></tt> ?</font></li>
+</ol>
+</td>
+</tr>
+</tbody></table>
+
+<h4>
+6.5 La communication par tube ("pipe")</h4>
+Il est possible de rediriger les sorties d'un processus de telle sorte
+que les données produites par ce processus soient utilisées
+en entrée d'un deuxième processus, s'exécutant
+<i>simultanément</i>
+au premier processus. Le symbole utilisé est le caractère
+'<tt><font size="+1">|</font></tt>' (tube ou "pipe" en anglais) :
+<blockquote><tt><font size="+1">pgm1 | pgm2</font></tt> crée deux
+processus, le premier exécutant le programme <tt><font size="+1">pgm1</font></tt>,
+le deuxième exécutant le programme <tt><font size="+1">pgm2</font></tt>
+; les résultats produits par <tt><font size="+1">pgm1</font></tt>
+sont utilisés comme données en entrée de <tt><font size="+1">pgm2</font></tt>.</blockquote>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 6</font></b>
+<ul>
+<li>
+<font color="#CC0000">Que fait la commande : <tt><font size="+1">ls -l |
+wc -l</font></tt></font></li>
+
+<br><font color="#CC0000">(utilisez <tt><font size="+1">man</font></tt> pour
+comprendre ce que fait <tt><font size="+1">wc</font></tt>)</font>.</ul>
+</td>
+</tr>
+</tbody></table>
+
+<h4>
+6.6 Séquencement</h4>
+L'opérateur de séquencement est le point virgule ('<tt><font size="+1">;</font></tt>').
+Il permet d'exécuter plusieurs commandes en séquence :
+<blockquote><tt><font size="+1">cde1; cde2; cde3</font></tt> déclenche
+l'exécution de <tt><font size="+1">cde1</font></tt>, puis de <tt><font size="+1">cde2</font></tt>,
+puis de <tt><font size="+1">cde3</font></tt>.</blockquote>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 7</font></b>
+<ul>
+<li>
+<font color="#CC0000">Construire la commande composée de trois sous-commandes
+exécutées en séquence et ayant un effet équivalent
+à celui de la commande donnée dans l'exercice précédent,
+en utilisant un fichier intermédiaire :</font></li>
+</ul>
+
+<ol>
+<ol>
+<li>
+<font color="#CC0000">stockage du résultat de <tt><font size="+1">ls
+-l</font></tt> dans un fichier <tt><font size="+1">f</font></tt></font></li>
+
+<li>
+<font color="#CC0000">comptabilisation du nombre de lignes de <tt><font size="+1">f</font></tt></font></li>
+
+<li>
+<font color="#CC0000">destruction du fichier <tt><font size="+1">f</font></tt></font></li>
+</ol>
+</ol>
+</td>
+</tr>
+</tbody></table>
+
+<h3 class="Niveau1">
+7. Un processus particulier, l'interprète de commandes ("shell")</h3>
+
+<h4 class="Niveau2">
+7.1 Notion d'interprète de commandes</h4>
+Le "shell" est un interpréteur de commandes. Il permet à
+l'utilisateur d'exécuter toutes les commandes offertes par le système.
+Son rôle est de préparer l'exécution d'un programme,
+en évaluant les expressions régulières dans la commande
+et en préparant les arguments qui seront passés au
+programme à exécuter. Historiquement, le premier interprète
+de commandes disponible sur les systèmes Unix a été
+<tt><font size="+1">sh</font></tt>
+appelé aussi le "Bourne shell". C'est un "shell" très
+simple qui a l'avantage d'être disponible sur toutes les plateformes
+Unix.
+<br>Par la suite, ont été developpés plusieurs interprètes
+de commandes étendant
+<tt><font size="+1">sh</font></tt>, tel que
+le "C shell" (<tt><font size="+1">csh</font></tt> puis <tt><font size="+1">tcsh</font></tt>),
+le "Korn shell" (<tt><font size="+1">ksh</font></tt>) et le "Bourne-Again
+shell" (<tt><font size="+1">bash</font></tt>). Ces différents
+shells sont assez proches les uns des l'autres. Il existe cependant des
+différences entre les ensembles de commandes interprétées
+et les syntaxes utilisées. Pour changer de shell (par exemple parce
+que le shell courant est différent de celui que l'on connaît
+le mieux), il suffit de taper la commande de lancement du shell voulu:
+<tt><font size="+1">csh</font></tt>,
+<tt><font size="+1">tcsh</font></tt>,
+<tt><font size="+1">sh</font></tt>,
+etc.
+<h4>
+<font size="+0">7.2 Quelques caractéristiques du shell</font></h4>
+Le premier processus lancé à la connexion d'un utilisateur
+exécute un interpréteur de commandes, le "shell". Ce dernier
+est exécuté selon une configuration décrite dans un
+ou plusieurs fichiers fichiers de configuration. L'un des éléments
+de cette configuration est constitué par les
+<br>variables d'environnements.
+<ul>
+<li class="Niveau3">
+<b>Les variables d'environnement</b></li>
+
+<br>Les variables d'environnement sont des valeurs (de type chaine de caractères)
+chacune identifiée et désignée par un nom. La valeur
+d'une variable d'environnement donnée peut être lue et utilisée
+par tous les programmes démarrés par l'interprète
+de commandes.
+<br>Dans la plupart des cas la valeur des variables d'environnement est
+établie en début de session, lors de la lecture des fichiers
+de configuration par l'interprète de commandes.
+<br>L'ensemble des variables d'environnement accessibles par un processus
+donné constitue l'<i>environnement</i> du programme exécuté
+par ce processus. Par convention le nom des variables d'environnement s'écrit
+en majuscules.
+<br>Pour établir ou modifier la valeur d'une variable d'environnement
+il faut utiliser une instruction spéciale de l'interprète
+de commande :
+<ul>
+<li class="Niveau3">
+<tt><font size="+1">setenv &lt;NOM_DE_VARIABLE&gt; &lt;valeur&gt;</font></tt> pour
+<tt><font size="+1">csh</font></tt>
+et <tt><font size="+1">tcsh</font></tt></li>
+
+<li class="Niveau3">
+<tt><font size="+1">&lt;NOM_DE_VARIABLE&gt;=&lt;valeur&gt;</font></tt> pour <tt><font size="+1">sh</font></tt>
+et <tt><font size="+1">bash</font></tt></li>
+
+Il faut dans le cas de ces deux derniers shells exécuter ensuite
+l'instruction <tt><font size="+1">export</font></tt> si l'on veut propager
+la variable d'environnement à toutes les commandes exécutées
+ultérieurement.</ul>
+Exemples :
+<ul>
+<li class="Niveau3">
+<tt><font size="+1">setenv DISPLAY samoa:0</font></tt> (<tt><font size="+1">csh</font></tt>
+ou <tt><font size="+1">tcsh</font></tt>)</li>
+
+<li class="Niveau3">
+<tt><font size="+1">DISPLAY=samoa:0</font></tt> (<tt><font size="+1">sh</font></tt>
+ou <tt><font size="+1">bash</font></tt>)
+
+<br><tt><font size="+1">export DISPLAY</font></tt></li>
+<li class="Niveau3">
+<tt><font size="+1">export DISPLAY=samoa:0</font></tt> (<tt><font size="+1">bash</font></tt>
+uniquement)</li>
+</ul>
+La valeur d'une variable d'environnement peut être affichée
+au moyen de la commande <tt><font size="+1">echo</font></tt> :
+<ul><tt><font size="+1">echo $&lt;NOM_DE_VARIABLE&gt;</font></tt></ul>
+Quelques variables d'environnement parmi les plus importantes sont listées
+ci-dessous :
+<ul>
+<li class="Liste">
+<b><tt><font size="+1">HOME</font></tt></b> : Contient le nom du répertoire
+d'accueil de l'utilisateur. C'est une variable établie automatiquement.</li>
+
+<li class="Liste">
+<b><tt><font size="+1">DISPLAY</font></tt></b> : détermine le poste
+de travail sur lequel l'affichage graphique est envoyé.</li>
+
+<li class="Liste">
+<b><tt><font size="+1">PATH</font></tt></b> : Cette variable contient la
+liste des noms des répertoires (séparés par le caractère
+'<tt><font size="+1">:</font></tt>') qui vont être explorés
+pour retrouver un exécutable en indiquant seulement son nom (utile
+par exemple pour les compilateurs, les débuggeurs, etc.).</li>
+
+<li class="Liste">
+<b><tt><font size="+1">MANPATH</font></tt></b> : contient les chemin d'accès
+aux fichiers contenant le manuel (<tt><font size="+1">man</font></tt>).</li>
+
+<li class="Liste">
+<b><tt><font size="+1">LIBRARY_PATH</font></tt></b> : De nombreux programmes
+utilisent des bibliothèques. Cette variable contient la liste des
+répertoires contenant ces bibliothèques.</li>
+
+<li class="Liste">
+<b><tt><font size="+1">USER</font></tt></b> : Positionnée automatiquement,
+cette variable contient le nom de l'utilisateur.</li>
+</ul>
+</ul>
+
+<blockquote>Il est important de noter que rien n'oblige à définir
+des variables d'environnement. Cependant certaines variables sont définies
+automatiquement par l'interprète de commandes en début de
+session, juste après la connexion de l'utilisateur. Par ailleurs,
+certains programmes (notamment les éditeurs de texte) utilisent
+des variables d'environnement spécifiques dont les valeurs déterminent
+la configuration de fonctionnement de ces programmes. La spécification
+de ces variables, de leur domaine de valeurs et de leur signification est
+en principe décrite dans le manuel en ligne de chaque programme
+ou commande.</blockquote>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 8</font></b>
+<blockquote><font color="#CC0000">Les valeurs de l'ensemble des variables
+d'environnement sont données par la commande <tt><font size="+1">env</font></tt>.</font>
+<br><font color="#CC0000">Examinez votre environnement au moyen de cette
+commande.</font></blockquote>
+</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>
+<b>Historique des commandes</b></li>
+
+<br>Les interprètes de commandes <tt><font size="+1">bash</font></tt>
+et <tt><font size="+1">tcsh</font></tt> mémorisent les différentes
+commandes exécutées par l'utilisateur . Il est ainsi possible
+d'accéder à l'historique des commandes exécutées
+précédemment :
+<ul>
+<li>
+La commande qui peut donner la liste des dernières commandes exécutées
+est <tt><font size="+1">history</font></tt>.</li>
+
+<li>
+<tt><font size="+1">!!</font></tt> permet de ré-exécuter la
+dernière commande, et <tt><font size="+1">!&lt;n&gt;</font></tt> permet
+de ré-exécuter la commande désignée par le
+numéro <tt><font size="+1">&lt;n&gt;</font></tt>.</li>
+</ul>
+</ul>
+
+<table border="" width="100%">
+<tbody><tr>
+<td><b><font color="#CC0000">Exercice 9</font></b>
+<ol type="a">
+<li>
+<font color="#CC0000">Naviguez dans l'historique : vous pouvez utiliser
+<tt><font size="+1">Ctrl-P</font></tt>
+pour aller en arrière dans l'historique ("previous") ou <tt><font size="+1">Ctrl-N</font></tt>
+pour aller en avant ("next"); à la place de <tt><font size="+1">Ctrl-P</font></tt>
+et <tt><font size="+1">Ctrl-N</font></tt> il est possible d'utiliser les
+flèches de déplacement.</font></li>
+
+<li>
+<font color="#CC0000">Réexécuter directement l'une des commandes
+précédemment exécutées en vous aidant du nuiméro
+de cette commande affiché par la commande <tt><font size="+1">history</font></tt>.</font></li>
+</ol>
+</td>
+</tr>
+</tbody></table>
+
+
+
+</body></html>
